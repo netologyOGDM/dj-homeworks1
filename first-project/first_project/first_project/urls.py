@@ -17,13 +17,31 @@ from django.contrib import admin
 from django.urls import path, include
 
 from app.views import home_view
-
+from app.views import time_view
+from app.views import workdir_view
 
 urlpatterns = [
     path('', home_view, name='home'),
     # Раскомментируйте код, чтобы данные урлы 
     # обрабатывались Django
-    # path('current_time/', time_view, name='time'),
-    # path('workdir/', workdir_view, name='workdir'),
+    path('current_time/', time_view, name='time'),
+    path('workdir/', workdir_view, name='workdir'),
     path('admin/', admin.site.urls),
 ]
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from datetime import datetime
+import os
+
+def home_view(request):
+    return render(request, 'home.html')
+
+def time_view(request):  # Обратите внимание на имя функции!
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return HttpResponse(f"Current Time: {current_time}")
+
+def workdir_view(request):  # Обратите внимание на имя функции!
+    files = os.listdir()
+    return HttpResponse("<br>".join(files))
